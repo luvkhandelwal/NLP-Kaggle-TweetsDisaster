@@ -32,9 +32,6 @@ trn=pd.read_csv('/kaggle/input/nlp-getting-started/train.csv')
 
 tst=pd.read_csv('/kaggle/input/nlp-getting-started/test.csv')
 
-
-
-
 #Data Clean
 
 def remove_punc(tweet):
@@ -51,59 +48,39 @@ def remove_punc(tweet):
 trn['text'] = trn['text'].apply(remove_punc)
 tst['text'] = tst['text'].apply(remove_punc)
 
-trn
-
-
-# stopwords
-from nltk.corpus import stopwords
-stop_words = stopwords.words('english')
-
-#def process(text):
-    
-#    for line in text:
-#            words=nltk.word_tokenize(line)
-#            new_line=[wo for wo in words if wo not in stop_words]
-#            line_joined=' '.join(new_line)
-#            result.append(line_joined)
-#            print(new_line,line_joined,result)
-            
- #   return result
-
 def tokenize(text):
     split=re.split("\W+",text) 
     return split
 trn['text']=trn['text'].apply(lambda x: tokenize(x.lower()))
-trn.head()
+
 
 def remove_stopwords(text):
     text=[word for word in text if word not in stop_words]
     return text
 trn['text'] = trn['text'].apply(lambda x: remove_stopwords(x))
-trn.head()
 
 X=trn['text']
 X_test=tst['text']
 
 
 Y=trn['target']
-X
+X=np.array(X)
+X_test=np.array(X_test)
 
-X=print([' '.join(c for c in list(lst)) for lst in X])
-
+X=([' '.join(c for c in list(lst)) for lst in X])
+X=np.array(X)
+                 
 #training
 tfi=TfidfVectorizer()
 
 tfi.fit(X)
-
+TfidfVectorizer()
 X=tfi.transform(X)
 X_test=tfi.transform(X_test)
-
 svm=SVC()
 svm.fit(X,Y)
 
 pred=svm.predict(X_test)
-
-
 pred=pd.DataFrame(pred)
 
 # %% [code]
